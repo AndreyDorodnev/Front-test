@@ -1,25 +1,29 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, {useState} from 'react';
+import Login from './components/auth/Login';
+import NavBar from './components/layout/NavBar';
+import Home from './components/home/Home';
+import {BrowserRouter as Router, Switch,Route} from 'react-router-dom';
+
+import AuthUserContext from './components/session/context';
 
 function App() {
+
+  const [user,setUser] = useState(null);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <AuthUserContext.Provider value={[user,setUser]}>
+      {console.log('USER',user)
+      }
+    <div>
+      <NavBar/>
+      <Router>
+        <Switch>
+          <Route exact path='/' component={Home}/>
+          <Route exact path='/login' component={Login}/>
+        </Switch>
+      </Router>
     </div>
+    </AuthUserContext.Provider>
   );
 }
 
