@@ -1,5 +1,6 @@
 import React from 'react';
 import Nav from 'react-bootstrap/Nav';
+import Button from 'react-bootstrap/Button';
 
 export default props => {
     return (
@@ -16,6 +17,7 @@ export default props => {
             <Nav.Item>
                 <Nav.Link eventKey="link-2">Link</Nav.Link>
             </Nav.Item>
+            <Button variant="primary" size="sm" onClick={props.btnClick}>SignOut</Button>
         </Nav>
     )
 }
