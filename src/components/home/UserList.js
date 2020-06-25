@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Image from 'react-bootstrap/Image';
 import Card from 'react-bootstrap/Card';
@@ -6,20 +6,12 @@ import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import InputGroup from 'react-bootstrap/InputGroup';
-import Form from 'react-bootstrap/Form';
 
 export default props => {
-
-    const [addMenu,setAddMenu] = useState(false);
 
     const onListScroll = (event) => {
         if(event.target.scrollTopMax - event.target.scrollTop<100)
             props.onBottomScroll();
-    }
-
-    const onShowHideAddMenu = () => {
-        setAddMenu(val => !val);
     }
 
     return (
