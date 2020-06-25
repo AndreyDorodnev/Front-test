@@ -1,34 +1,57 @@
-import React, {useState} from 'react';
-import ListGroup from 'react-bootstrap/ListGroup';
-import Image from 'react-bootstrap/Image';
-import Card from 'react-bootstrap/Card';
+import React, {useState, useEffect} from 'react';
 import Button from 'react-bootstrap/Button';
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import InputGroup from 'react-bootstrap/InputGroup';
 import Form from 'react-bootstrap/Form';
-import FormControl from 'react-bootstrap/FormControl';
+import Card from 'react-bootstrap/Card';
 
 export default props => {
 
+    const [id,setId] = useState(0);
+    const [email,setEmail] = useState('');
+    const [firstName,setfirstName] = useState('');
+    const [lastName,setlastName] = useState('');
+
+    useEffect(()=>{
+        if(props.user){
+            setId(props.user.id);
+            setEmail(props.user.email);
+            setfirstName(props.user.first_name);
+            setlastName(props.user.last_name);
+        }
+    },[props]);
+
+    const editFormSubmit = event => {
+        event.preventDefault();
+        props.editUser&&props.editUser({
+            id,
+            email,
+            first_name: firstName,
+            last_name: lastName
+        });
+    }
+
     return (
-        <Form className='edit-form'>
-            <Form.Group controlId="formBasicEmail">
-                <Form.Label>Email address</Form.Label>
-                <Form.Control type="email" required placeholder="Enter email" value={props.user.email} />
-            </Form.Group>
-            <Form.Group controlId="formBasicPassword">
-                <Form.Label>First name</Form.Label>
-                <Form.Control type="text" required placeholder="Password" value={props.user.first_name}  />
-            </Form.Group>
-            <Form.Group controlId="formBasicPassword">
-                <Form.Label>Last name</Form.Label>
-                <Form.Control type="text" required placeholder="Password" value={props.user.last_name} />
-            </Form.Group>
-            <Button variant="primary">
-                Edit
-            </Button>
-        </Form>
+        <Card>
+            <Card.Header>User Edit</Card.Header>
+            <Form className='edit-form' onSubmit={editFormSubmit}>
+                <Form.Group controlId="formBasicEmail">
+                    <Form.Label>Email address</Form.Label>
+                    <Form.Control type="email" required placeholder="Enter email" value={email} onChange={e=>setEmail(e.target.value)}/>
+                </Form.Group>
+                <Form.Group controlId="formBasicPassword">
+                    <Form.Label>First name</Form.Label>
+                    <Form.Control type="text" required placeholder="Password" value={firstName} onChange={e=>setfirstName(e.target.value)} />
+                </Form.Group>
+                <Form.Group controlId="formBasicPassword">
+                    <Form.Label>Last name</Form.Label>
+                    <Form.Control type="text" required placeholder="Password" value={lastName} onChange={e=>setlastName(e.target.value)}/>
+                </Form.Group>
+                <Button variant="primary" type="submit">
+                    Edit
+                </Button>
+                <Button variant="warning" onClick={props.cancelEdit}>
+                    Cancel
+                </Button>
+            </Form>
+        </Card>
     )
 }
