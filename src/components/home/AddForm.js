@@ -12,18 +12,26 @@ export default props => {
 
     const addFormSubmit = (event) => {
         event.preventDefault();
-        props.createUser({
+        props.createUser&&props.createUser({
             email: email,
             first_name: firstName,
             last_name: lastName,
             password: password
-        });
+        }); 
+        event.target.reset();
+    }
+
+    const clearForm = () => {
+        setEmail('');
+        setfirstName('');
+        setlastName('');
+        setpassword('');
     }
 
     return (
         <Card>
             <Card.Header>Add user</Card.Header>
-            <Form className='edit-form' onSubmit={addFormSubmit}>
+            <Form className='edit-form' onReset={clearForm} onSubmit={addFormSubmit}>
                 <Form.Group controlId="formBasicEmail">
                     <Form.Label>Email address</Form.Label>
                     <Form.Control type="email" required placeholder="Enter email" value={email} onChange={e=>setEmail(e.target.value)} />
