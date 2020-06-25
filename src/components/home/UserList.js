@@ -14,8 +14,6 @@ export default props => {
     const [addMenu,setAddMenu] = useState(false);
 
     const onListScroll = (event) => {
-        // console.log('SCROLL',event.target);
-        // debugger;
         if(event.target.scrollTopMax - event.target.scrollTop<100)
             props.onBottomScroll();
     }
