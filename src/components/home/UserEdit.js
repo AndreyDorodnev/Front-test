@@ -14,15 +14,14 @@ import AddForm from './AddForm';
 
 export default props => {
     return (
-        <Card>
-            <Card.Header>User Edit</Card.Header>
+        <React.Fragment>
             {
                 props.user? 
-                <EditForm user={props.user}/>
+                <EditForm user={props.user} editUser={props.editUser} cancelEdit={props.cancelEdit}/>
                 :
                 <AddForm createUser={props.createUser}/>
             }
-            
-        </Card>
+        </React.Fragment>
+
     )
 }
