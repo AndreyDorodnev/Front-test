@@ -4,7 +4,6 @@ import {withRouter} from 'react-router-dom';
 import axios from 'axios';
 import { debounce } from "lodash";
 import UserList from './UserList';
-import Button from 'react-bootstrap/Button';
 import UserEdit from './UserEdit';
 
 function Home(props) {
@@ -14,25 +13,32 @@ function Home(props) {
     const [userData,setUserData] = useState([]);
     const [user] = useContext(AuthUserContext);
     const [selectedUser,setSelectedUser] = useState(null);
+    const [dataError,setDataError] = useState(null);
 
     useEffect(()=>{
         if(!user){
             props.history.push('/login');
         }
-    },[user]);
+    },[user,props.history]);
 
     useEffect(() => {
+        let didCancel = false;
         const fetchData = async () => {
             try{
                 const result = await axios.get(`https://reqres.in/api/users?page=${pageNum}`);
-                console.log(result);
-                setUserData(prev => prev.concat(result.data.data));
-                setMaxPages(result.data.total_pages);
+                if (!didCancel) {
+                    setUserData(prev => prev.concat(result.data.data));
+                    setMaxPages(result.data.total_pages);
+                }
             } catch(error){
                 console.log(error);
+                setDataError(error.message);
             }
         };
         fetchData();
+        return () => {
+            didCancel = true;
+        };
       }, [pageNum]);
 
 
@@ -50,6 +56,7 @@ function Home(props) {
             setUserData(prevData => prevData.filter(el => el.id !== id));
         } catch(error) {
             console.log(error);
+            setDataError(error.message);
         }
     }
     
@@ -59,18 +66,19 @@ function Home(props) {
 
     const createUser = async (user) => {
         const {email,first_name,last_name,password} = user;
-        user.id = userData[userData.length-1].id + 1;
         try{
             const result = await axios.post('https://reqres.in/api/users',{email,first_name,last_name,password});
-            setUserData(prevData => prevData.concat([user]));
+            console.log(result);
+            setUserData(prevData => prevData.concat([result.data]));
         } catch(error) {
             console.log(error);
+            setDataError(error.message);
         }
     }
     const editUser = async (user) => {
         const {id,email,first_name,last_name} = user;
         try{
-            const result = await axios.put(`https://reqres.in/api/users/${id}`,{email,first_name,last_name});
+            await axios.put(`https://reqres.in/api/users/${id}`,{email,first_name,last_name});
             setSelectedUser(null);
             setUserData(prevData => prevData.map(element=>{
                 if(element.id === id){
@@ -82,6 +90,7 @@ function Home(props) {
             }));
         } catch(error) {
             console.log(error);
+            setDataError(error.message);
         }
     }
 
@@ -91,6 +100,11 @@ function Home(props) {
 
     return (
         <div className="home">
+            {
+                dataError?
+                <p className="data-error">{dataError}</p> :
+                null
+            }
             <UserList data={userData} onBottomScroll={debouncedScroll} onItemDelete={deleteUser} onEditClick={selectUser}/>
             <UserEdit user={selectedUser} createUser={createUser} editUser={editUser} cancelEdit={cancelEdit}/>
         </div>
