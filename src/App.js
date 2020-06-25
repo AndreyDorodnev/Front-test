@@ -3,12 +3,12 @@ import Login from './components/auth/Login';
 import NavBar from './components/layout/NavBar';
 import Home from './components/home/Home';
 import {BrowserRouter as Router, Switch,Route} from 'react-router-dom';
-
+import {loadState} from './localStorage';
 import AuthUserContext from './components/session/context';
 
 function App() {
 
-  const [user,setUser] = useState(null);
+  const [user,setUser] = useState(loadState());
 
   return (
     <AuthUserContext.Provider value={[user,setUser]}>

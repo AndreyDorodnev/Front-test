@@ -4,6 +4,7 @@ import Button from 'react-bootstrap/Button';
 import axios from 'axios';
 import {withRouter} from 'react-router-dom';
 import AuthUserContext from '../session/context';
+import {saveState} from '../../localStorage';
 
 function Login(props) {
 
@@ -30,6 +31,7 @@ function Login(props) {
             // const result = await axios.post('https://reqres.in/api/login',{email:'eve.holt@reqres.in',password:"cityslicka"});
             const result = await axios.post('https://reqres.in/api/login',{email,password});
             console.log(result);
+            saveState(result.data);
             setUser(result.data);
             props.history.push('/');
         } catch(error){
