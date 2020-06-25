@@ -10,6 +10,7 @@ function Login(props) {
 
     const [email,setEmail] = useState('');
     const [password,setPassword] = useState('');
+    const [authError,setAuthError] = useState(null);
 
     const [user,setUser] = useContext(AuthUserContext);
 
@@ -28,16 +29,12 @@ function Login(props) {
 
     const signIn = async () => {
         try {
-            // const result = await axios.post('https://reqres.in/api/login',{email:'eve.holt@reqres.in',password:"cityslicka"});
             const result = await axios.post('https://reqres.in/api/login',{email,password});
-            console.log(result);
             saveState(result.data);
             setUser(result.data);
             props.history.push('/');
         } catch(error){
-            debugger;
-            console.log(error);
-            
+            setAuthError(error.response.data.error&&error.message);
         }
     }
 
@@ -52,6 +49,16 @@ function Login(props) {
                 <Form.Label>Password</Form.Label>
                 <Form.Control type="password" required placeholder="Password" value={password} onChange={e=>passwordChange(e.target.value)} />
             </Form.Group>
+            {
+                authError? 
+                <Form.Group>
+                    <Form.Text className="text-danger">
+                    {authError}
+                    </Form.Text>
+                </Form.Group>
+                :
+                null
+            }
             <Button variant="primary" type="submit">
                 Submit
             </Button>
